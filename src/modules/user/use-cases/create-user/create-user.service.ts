@@ -35,8 +35,6 @@ export class CreateUserService implements IService {
             password: await bcrypt.hash(data.password, 10),
         });
 
-        console.log(createdUser);
-
         if (!createdUser) {
             throw new ErrorCreatingUserException();
         }
