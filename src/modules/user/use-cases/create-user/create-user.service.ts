@@ -10,10 +10,10 @@ import { ErrorCreatingUserException } from 'src/exceptions/user-exceptions/error
 
 @Injectable()
 export class CreateUserService implements IService {
-    constructor(private readonly createUserRepository: UserRepository) {}
+    constructor(private readonly userRepository: UserRepository) {}
 
     async execute(data: CreateUserDTO): Promise<UserEntity> {
-        const userAlreadyExists = await this.createUserRepository.findByName(
+        const userAlreadyExists = await this.userRepository.findByName(
             data.name,
         );
 
@@ -21,7 +21,7 @@ export class CreateUserService implements IService {
             throw new UserAlreadyExistsByNameException();
         }
 
-        const emailAlreadyExists = await this.createUserRepository.findByEmail(
+        const emailAlreadyExists = await this.userRepository.findByEmail(
             data.email,
         );
 
@@ -29,7 +29,7 @@ export class CreateUserService implements IService {
             throw new UserAlreadyExistsByEmailException();
         }
 
-        const createdUser = await this.createUserRepository.create({
+        const createdUser = await this.userRepository.create({
             name: data.name,
             email: data.email,
             password: await bcrypt.hash(data.password, 10),
