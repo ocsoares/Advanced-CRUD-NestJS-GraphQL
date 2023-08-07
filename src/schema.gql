@@ -8,16 +8,26 @@ type UserEntity {
   email: String!
 }
 
+type TokenType {
+  token: String!
+}
+
 type Query {
   findAllUsers: [UserEntity!]!
 }
 
 type Mutation {
   createUser(body: CreateUserDTO!): UserEntity!
+  loginUser(body: LoginUserDTO!): TokenType!
 }
 
 input CreateUserDTO {
   name: String!
+  email: String!
+  password: String!
+}
+
+input LoginUserDTO {
   email: String!
   password: String!
 }
