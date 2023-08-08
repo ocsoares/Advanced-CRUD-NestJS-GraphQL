@@ -14,6 +14,7 @@ type TokenType {
 
 type Query {
   findAllUsers: [UserEntity!]!
+  findUser(id: String!): UserEntity!
 }
 
 type Mutation {

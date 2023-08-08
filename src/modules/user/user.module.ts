@@ -6,6 +6,8 @@ import { FindAllUsersService } from './use-cases/find-all-users/find-all-users.s
 import { FindAllUsersResolver } from './use-cases/find-all-users/find-all-users.resolver';
 import { AuthModule } from '../auth/auth.module';
 import { LoginUserResolver } from './use-cases/login-user/login-user.resolver';
+import { FindUserService } from './use-cases/find-user/find-user.service';
+import { FindUserResolver } from './use-cases/find-user/find-user.resolver';
 
 @Module({
     imports: [AuthModule],
@@ -17,6 +19,8 @@ import { LoginUserResolver } from './use-cases/login-user/login-user.resolver';
         FindAllUsersResolver,
         LoginUserService,
         LoginUserResolver,
+        FindUserService,
+        FindUserResolver,
     ],
 })
 export class UserModule {}

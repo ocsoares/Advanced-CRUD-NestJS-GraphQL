@@ -1,3 +1,3 @@
 export interface IResolver {
-    handle(...args: object[]): Promise<object | string>;
+    handle(...args: object[] | string[]): Promise<object | string>;
 }
