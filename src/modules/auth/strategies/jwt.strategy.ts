@@ -1,10 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { PassportStrategy } from '@nestjs/passport';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { UserRepository } from 'src/repositories/abstracts/UserRepository';
+import { ITokenPayload } from 'src/interfaces/ITokenPayload';
+import { UserEntity } from 'src/graphql/entities/user.entity';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-    constructor() {
+    constructor(private readonly userRepository: UserRepository) {
         super({
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
             ignoreExpiration: false,
@@ -12,11 +15,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         });
     }
 
-    async validate(payload: any): Promise<any> {
-        return {
-            id: payload.sub,
-            email: payload.email,
-            name: payload.name,
-        };
+    async validate(payload: ITokenPayload): Promise<UserEntity> {
+        const user = await this.userRepository.findById(payload.sub);
+
+        if (!user) {
+            throw new UnauthorizedException();
+        }
+
+        return user;
     }
 }
