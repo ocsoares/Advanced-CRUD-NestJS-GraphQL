@@ -20,6 +20,7 @@ type Query {
 type Mutation {
   createUser(body: CreateUserDTO!): UserEntity!
   loginUser(body: LoginUserDTO!): TokenType!
+  deleteUser(id: String!): Boolean!
 }
 
 input CreateUserDTO {

@@ -8,6 +8,8 @@ import { AuthModule } from '../auth/auth.module';
 import { LoginUserResolver } from './use-cases/login-user/login-user.resolver';
 import { FindUserService } from './use-cases/find-user/find-user.service';
 import { FindUserResolver } from './use-cases/find-user/find-user.resolver';
+import { DeleteUserService } from './use-cases/delete-user/delete-user.service';
+import { DeleteUserResolver } from './use-cases/delete-user/delete-user.resolver';
 
 @Module({
     imports: [AuthModule],
@@ -21,6 +23,8 @@ import { FindUserResolver } from './use-cases/find-user/find-user.resolver';
         LoginUserResolver,
         FindUserService,
         FindUserResolver,
+        DeleteUserService,
+        DeleteUserResolver,
     ],
 })
 export class UserModule {}

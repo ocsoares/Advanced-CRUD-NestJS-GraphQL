@@ -6,16 +6,16 @@ import { CreateUserDTO } from 'src/modules/user/use-cases/create-user/dtos/Creat
 
 @Injectable()
 export class PrismaUserRepository implements UserRepository {
-    constructor(private readonly _prismaService: PrismaService) {}
+    constructor(private readonly prismaService: PrismaService) {}
 
     async create(data: CreateUserDTO): Promise<UserEntity> {
-        const createUser = await this._prismaService.user.create({ data });
+        const createUser = await this.prismaService.user.create({ data });
 
         return createUser;
     }
 
     async findByEmail(email: string): Promise<UserEntity> {
-        const findByEmail = await this._prismaService.user.findUnique({
+        const findByEmail = await this.prismaService.user.findUnique({
             where: { email },
         });
 
@@ -23,7 +23,7 @@ export class PrismaUserRepository implements UserRepository {
     }
 
     async findById(id: string): Promise<UserEntity> {
-        const findById = await this._prismaService.user.findUnique({
+        const findById = await this.prismaService.user.findUnique({
             where: { id },
         });
 
@@ -31,7 +31,7 @@ export class PrismaUserRepository implements UserRepository {
     }
 
     async findByName(name: string): Promise<UserEntity> {
-        const findByName = await this._prismaService.user.findUnique({
+        const findByName = await this.prismaService.user.findUnique({
             where: { name },
         });
 
@@ -39,8 +39,18 @@ export class PrismaUserRepository implements UserRepository {
     }
 
     async findAll(): Promise<UserEntity[]> {
-        const findAll = await this._prismaService.user.findMany();
+        const findAll = await this.prismaService.user.findMany();
 
         return findAll;
+    }
+
+    async deleteOneById(id: string): Promise<UserEntity> {
+        const deleteUser = await this.prismaService.user.delete({
+            where: {
+                id,
+            },
+        });
+
+        return deleteUser;
     }
 }
