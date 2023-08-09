@@ -20,7 +20,7 @@ export class UpdateUserService implements IService {
 
         if (data.password) {
             if (data.password !== user.password) {
-                data.password = await EncryptPasswordHelper.bcrypt(
+                data.password = await EncryptPasswordHelper.bcryptEncrypt(
                     data.password,
                     10,
                 );

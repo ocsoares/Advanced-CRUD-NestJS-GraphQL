@@ -32,7 +32,10 @@ export class CreateUserService implements IService {
         const createdUser = await this.userRepository.create({
             name: data.name,
             email: data.email,
-            password: await EncryptPasswordHelper.bcrypt(data.password, 10),
+            password: await EncryptPasswordHelper.bcryptEncrypt(
+                data.password,
+                10,
+            ),
         });
 
         if (!createdUser) {
