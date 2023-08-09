@@ -1,19 +1,28 @@
-import { BadRequestException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { IUser } from 'src/models/IUser';
 import { UserRepository } from '../../../../repositories/abstracts/UserRepository';
 import { CreateUserService } from './create-user.service';
-import * as bcript from 'bcrypt';
+import { TestUtilsCommon } from '../../../../common/test/test-utils.common';
+import { EncryptPasswordHelper } from '../../../../helpers/encrypt-password.helper';
+import { UserEntity } from '../../../../graphql/entities/user.entity';
+import { UserAlreadyExistsByNameException } from '../../../../exceptions/user-exceptions/user-already-exists-by-name.exception';
+import { UserAlreadyExistsByEmailException } from '../../../../exceptions/user-exceptions/user-already-exists-by-email.exception';
 
 describe('CreateUserService', () => {
-    let service: CreateUserService;
+    let createUserService: CreateUserService;
     let repository: UserRepository;
+    let mockedUser: UserEntity;
 
-    const userData: IUser = {
-        name: 'Teste',
-        email: 'teste@gmail.com',
-        password: 'teste23',
+    const mockUserRepository = {
+        create: jest.fn(),
+        findById: jest.fn(),
+        findByName: jest.fn(),
+        findByEmail: jest.fn(),
+        findAll: jest.fn(),
+        deleteOneById: jest.fn(),
+        updateOneById: jest.fn(),
     };
+
+    const userDataDTO = TestUtilsCommon.userDataDTO();
 
     beforeEach(async () => {
         const module = await Test.createTestingModule({
@@ -21,81 +30,67 @@ describe('CreateUserService', () => {
                 CreateUserService,
                 {
                     provide: UserRepository,
-                    useValue: {
-                        findByName: jest.fn(),
-                        findByEmail: jest.fn(),
-                        create: jest.fn(),
-                    },
+                    useValue: mockUserRepository,
                 },
             ],
         }).compile();
 
-        service = module.get<CreateUserService>(CreateUserService);
+        createUserService = module.get<CreateUserService>(CreateUserService);
         repository = module.get(UserRepository);
+
+        mockedUser = await TestUtilsCommon.newUser(true);
+    });
+
+    afterEach(() => {
+        Object.values(mockUserRepository).forEach((mockedMethod) =>
+            mockedMethod.mockReset(),
+        );
     });
 
     it('should be defined', () => {
-        expect(service).toBeDefined();
+        expect(createUserService).toBeDefined();
         expect(repository).toBeDefined();
-    });
-
-    it('should throw BadRequestException if user already exists with findByName method', async () => {
-        (repository.findByName as jest.Mock).mockResolvedValue(userData);
-
-        await expect(service.execute(userData)).rejects.toThrow(
-            new BadRequestException(
-                'Já existe um usuário cadastrado com esse nome !',
-            ),
-        );
-
-        expect(repository.findByName).toHaveBeenCalledWith(userData.name);
-    });
-
-    it('should throw BadRequestException if user already exists with findByEmail method', async () => {
-        (repository.findByEmail as jest.Mock).mockResolvedValue(userData);
-
-        await expect(service.execute(userData)).rejects.toThrow(
-            new BadRequestException(
-                'Já existe um usuário cadastrado com esse email !',
-            ),
-        );
-
-        expect(repository.findByEmail).toHaveBeenCalledWith(userData.email);
+        expect(mockUserRepository).toBeDefined();
+        expect(mockedUser).toBeDefined();
+        expect(userDataDTO).toBeDefined();
     });
 
     it('should create a new user', async () => {
-        const userData: IUser = {
-            name: 'TesteUser',
-            email: 'testeuser@gmail.com',
-            password: 'testeuser123',
-        };
+        mockUserRepository.create.mockResolvedValue(mockedUser);
 
-        const repositoryCreateData = {
-            ...userData,
-            password: await bcript.hash(userData.password, 10),
-        };
+        const createUser = await createUserService.execute(userDataDTO);
 
-        const userDataWithoutPassword = {
-            name: userData.name,
-            email: userData.email,
-        };
+        const isValidEncryptedPassword =
+            await EncryptPasswordHelper.bcryptCompare(
+                userDataDTO.password,
+                mockedUser.password,
+            );
 
-        (repository.create as jest.Mock).mockResolvedValue(<IUser>{
-            ...repositoryCreateData,
-        });
-
-        const createUser = await service.execute(userData);
-
-        const isValidEncryptedPassword = await bcript.compare(
-            userData.password,
-            repositoryCreateData.password,
-        );
-
-        expect(createUser).toEqual(userDataWithoutPassword);
+        expect(createUser).toEqual(mockedUser);
         expect(isValidEncryptedPassword).toBe(true);
         expect(repository.create).toHaveBeenCalledWith({
-            ...repositoryCreateData,
+            ...userDataDTO,
             password: expect.any(String),
         });
+    });
+
+    it('should throw BadRequestException if user already exists with findByName method', async () => {
+        mockUserRepository.findByName.mockResolvedValue(userDataDTO);
+
+        await expect(createUserService.execute(userDataDTO)).rejects.toThrow(
+            new UserAlreadyExistsByNameException(),
+        );
+
+        expect(repository.findByName).toHaveBeenCalledWith(userDataDTO.name);
+    });
+
+    it('should throw BadRequestException if user already exists with findByEmail method', async () => {
+        mockUserRepository.findByEmail.mockResolvedValue(userDataDTO);
+
+        await expect(createUserService.execute(userDataDTO)).rejects.toThrow(
+            new UserAlreadyExistsByEmailException(),
+        );
+
+        expect(repository.findByName).toHaveBeenCalledWith(userDataDTO.name);
     });
 });
