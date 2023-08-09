@@ -12,6 +12,8 @@ import { DeleteUserService } from './use-cases/delete-user/delete-user.service';
 import { DeleteUserResolver } from './use-cases/delete-user/delete-user.resolver';
 import { UpdateUserService } from './use-cases/update-user/update-user.service';
 import { UpdateUserResolver } from './use-cases/update-user/update-user.resolver';
+import { MeUserService } from './use-cases/me-user/me-user.service';
+import { MeUserResolver } from './use-cases/me-user/me-user.resolver';
 
 @Module({
     imports: [AuthModule],
@@ -29,6 +31,8 @@ import { UpdateUserResolver } from './use-cases/update-user/update-user.resolver
         DeleteUserResolver,
         UpdateUserService,
         UpdateUserResolver,
+        MeUserService,
+        MeUserResolver,
     ],
 })
 export class UserModule {}
