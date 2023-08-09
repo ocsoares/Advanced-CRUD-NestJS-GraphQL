@@ -6,6 +6,7 @@ import { EncryptPasswordHelper } from '../../../../helpers/encrypt-password.help
 import { UserEntity } from '../../../../graphql/entities/user.entity';
 import { UserAlreadyExistsByNameException } from '../../../../exceptions/user-exceptions/user-already-exists-by-name.exception';
 import { UserAlreadyExistsByEmailException } from '../../../../exceptions/user-exceptions/user-already-exists-by-email.exception';
+import { ErrorCreatingUserException } from '../../../../exceptions/user-exceptions/error-creating-user.exception';
 
 describe('CreateUserService', () => {
     let createUserService: CreateUserService;
@@ -74,7 +75,7 @@ describe('CreateUserService', () => {
         });
     });
 
-    it('should throw BadRequestException if user already exists with findByName method', async () => {
+    it('should NOT create a new user if the user already exists with findByName method', async () => {
         mockUserRepository.findByName.mockResolvedValue(userDataDTO);
 
         await expect(createUserService.execute(userDataDTO)).rejects.toThrow(
@@ -84,11 +85,19 @@ describe('CreateUserService', () => {
         expect(repository.findByName).toHaveBeenCalledWith(userDataDTO.name);
     });
 
-    it('should throw BadRequestException if user already exists with findByEmail method', async () => {
+    it('should NOT create a new user if the user already exists with findByEmail method', async () => {
         mockUserRepository.findByEmail.mockResolvedValue(userDataDTO);
 
         await expect(createUserService.execute(userDataDTO)).rejects.toThrow(
             new UserAlreadyExistsByEmailException(),
+        );
+
+        expect(repository.findByName).toHaveBeenCalledWith(userDataDTO.name);
+    });
+
+    it(`should return an InternalServerError if the created user doesn't exists`, async () => {
+        await expect(createUserService.execute(userDataDTO)).rejects.toThrow(
+            new ErrorCreatingUserException(),
         );
 
         expect(repository.findByName).toHaveBeenCalledWith(userDataDTO.name);
