@@ -3,6 +3,7 @@ import { UserRepository } from 'src/repositories/abstracts/UserRepository';
 import { PrismaService } from '../prisma-client.service';
 import { UserEntity } from 'src/graphql/entities/user.entity';
 import { CreateUserDTO } from 'src/modules/user/use-cases/create-user/dtos/CreateUserDTO';
+import { UpdateUserDTO } from 'src/modules/user/use-cases/update-user/dtos/UpdateUserDTO';
 
 @Injectable()
 export class PrismaUserRepository implements UserRepository {
@@ -52,5 +53,16 @@ export class PrismaUserRepository implements UserRepository {
         });
 
         return deleteUser;
+    }
+
+    async updateOneById(id: string, data: UpdateUserDTO): Promise<UserEntity> {
+        const updateUser = await this.prismaService.user.update({
+            where: {
+                id,
+            },
+            data,
+        });
+
+        return updateUser;
     }
 }

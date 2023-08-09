@@ -21,6 +21,7 @@ type Mutation {
   createUser(body: CreateUserDTO!): UserEntity!
   loginUser(body: LoginUserDTO!): TokenType!
   deleteUser(id: String!): Boolean!
+  updateUser(id: String!, data: UpdateUserDTO!): UserEntity!
 }
 
 input CreateUserDTO {
@@ -32,4 +33,10 @@ input CreateUserDTO {
 input LoginUserDTO {
   email: String!
   password: String!
+}
+
+input UpdateUserDTO {
+  name: String
+  email: String
+  password: String
 }

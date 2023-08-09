@@ -1,3 +1,3 @@
 export interface IService {
-    execute(data?: string | object): Promise<string | object | boolean>;
+    execute(...args: any[]): Promise<string | object | boolean>;
 }
