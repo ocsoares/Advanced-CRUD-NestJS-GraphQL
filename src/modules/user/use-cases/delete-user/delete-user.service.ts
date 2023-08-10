@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ErrorDeletingException } from 'src/exceptions/user-exceptions/error-deleting-user.exception';
-import { UserNotFoundException } from 'src/exceptions/user-exceptions/user-not-found.exception';
-import { IService } from 'src/interfaces/IService';
-import { UserRepository } from 'src/repositories/abstracts/UserRepository';
+import { ErrorDeletingUserException } from '../../../../exceptions/user-exceptions/error-deleting-user.exception';
+import { UserNotFoundException } from '../../../../exceptions/user-exceptions/user-not-found.exception';
+import { IService } from '../../../../interfaces/IService';
+import { UserRepository } from '../../../../repositories/abstracts/UserRepository';
 
 @Injectable()
 export class DeleteUserService implements IService {
@@ -18,7 +18,7 @@ export class DeleteUserService implements IService {
         const deletedUser = await this.userRepository.deleteOneById(id);
 
         if (!deletedUser) {
-            throw new ErrorDeletingException();
+            throw new ErrorDeletingUserException();
         }
 
         return true;
