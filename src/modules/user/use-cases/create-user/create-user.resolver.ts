@@ -1,8 +1,8 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 import { CreateUserService } from './create-user.service';
 import { CreateUserDTO } from './dtos/CreateUserDTO';
-import { IResolver } from 'src/interfaces/IResolver';
-import { UserEntity } from 'src/graphql/entities/user.entity';
+import { IResolver } from '../../../../interfaces/IResolver';
+import { UserEntity } from '../../../../graphql/entities/user.entity';
 
 @Resolver()
 export class CreateUserResolver implements IResolver {
