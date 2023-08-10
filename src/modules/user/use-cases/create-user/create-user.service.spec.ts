@@ -69,6 +69,12 @@ describe('CreateUserService', () => {
 
         expect(createUser).toEqual(mockedUser);
         expect(isValidEncryptedPassword).toBe(true);
+        expect(userRepository.findByName).toHaveBeenCalledWith(
+            createUserDTO.name,
+        );
+        expect(userRepository.findByEmail).toHaveBeenCalledWith(
+            createUserDTO.email,
+        );
         expect(userRepository.create).toHaveBeenCalledWith({
             ...createUserDTO,
             password: expect.any(String),
@@ -85,6 +91,8 @@ describe('CreateUserService', () => {
         expect(userRepository.findByName).toHaveBeenCalledWith(
             createUserDTO.name,
         );
+
+        expect(userRepository.create).toHaveBeenCalledTimes(0);
     });
 
     it('should NOT create a new user if the user already exists with findByEmail method', async () => {
@@ -97,6 +105,8 @@ describe('CreateUserService', () => {
         expect(userRepository.findByName).toHaveBeenCalledWith(
             createUserDTO.name,
         );
+
+        expect(userRepository.create).toHaveBeenCalledTimes(0);
     });
 
     it(`should return an InternalServerError if the created user doesn't exists`, async () => {
@@ -107,5 +117,10 @@ describe('CreateUserService', () => {
         expect(userRepository.findByName).toHaveBeenCalledWith(
             createUserDTO.name,
         );
+
+        expect(userRepository.create).toHaveBeenCalledWith({
+            ...createUserDTO,
+            password: expect.any(String),
+        });
     });
 });
