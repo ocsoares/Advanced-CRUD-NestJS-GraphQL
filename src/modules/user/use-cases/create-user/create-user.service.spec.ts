@@ -84,6 +84,8 @@ describe('CreateUserService', () => {
             createUserDTO.name,
         );
 
+        expect(userRepository.findByEmail).toHaveBeenCalledTimes(0);
+
         expect(userRepository.create).toHaveBeenCalledTimes(0);
     });
 
@@ -98,6 +100,10 @@ describe('CreateUserService', () => {
             createUserDTO.name,
         );
 
+        expect(userRepository.findByEmail).toHaveBeenCalledWith(
+            createUserDTO.email,
+        );
+
         expect(userRepository.create).toHaveBeenCalledTimes(0);
     });
 
@@ -108,6 +114,10 @@ describe('CreateUserService', () => {
 
         expect(userRepository.findByName).toHaveBeenCalledWith(
             createUserDTO.name,
+        );
+
+        expect(userRepository.findByEmail).toHaveBeenCalledWith(
+            createUserDTO.email,
         );
 
         expect(userRepository.create).toHaveBeenCalledWith({
