@@ -12,9 +12,7 @@ describe('CreateUserResolver', () => {
     let createUserService: CreateUserService;
     let mockedCreatedUser: UserEntity;
 
-    const mockCreateUserService = {
-        execute: jest.fn(),
-    };
+    const mockCreateUserService = TestUtilsCommon.mockService();
 
     const createUserDTO = TestUtilsCommon.userDataDTO();
 

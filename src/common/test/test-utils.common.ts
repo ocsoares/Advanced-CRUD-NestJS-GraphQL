@@ -7,6 +7,28 @@ const TEST_UTILS_EMAIL = 'test_utils@gmail.com';
 const TEST_UTILS_PASSWORD = 'test-utils123';
 
 export class TestUtilsCommon {
+    static mockUserRepository() {
+        const mockUserRepository = {
+            create: jest.fn(),
+            findById: jest.fn(),
+            findByName: jest.fn(),
+            findByEmail: jest.fn(),
+            findAll: jest.fn(),
+            deleteOneById: jest.fn(),
+            updateOneById: jest.fn(),
+        };
+
+        return mockUserRepository;
+    }
+
+    static mockService() {
+        const mockService = {
+            execute: jest.fn(),
+        };
+
+        return mockService;
+    }
+
     static userDataDTO(): CreateUserDTO {
         const createUserDTO: CreateUserDTO = {
             name: TEST_UTILS_NAME,

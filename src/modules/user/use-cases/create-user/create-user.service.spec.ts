@@ -13,15 +13,7 @@ describe('CreateUserService', () => {
     let userRepository: UserRepository;
     let mockedUser: UserEntity;
 
-    const mockUserRepository = {
-        create: jest.fn(),
-        findById: jest.fn(),
-        findByName: jest.fn(),
-        findByEmail: jest.fn(),
-        findAll: jest.fn(),
-        deleteOneById: jest.fn(),
-        updateOneById: jest.fn(),
-    };
+    const mockUserRepository = TestUtilsCommon.mockUserRepository();
 
     const createUserDTO = TestUtilsCommon.userDataDTO();
 
