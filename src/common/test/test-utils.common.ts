@@ -29,7 +29,7 @@ export class TestUtilsCommon {
         return mockService;
     }
 
-    static userDataDTO(): CreateUserDTO {
+    static createUserDataDTO(): CreateUserDTO {
         const createUserDTO: CreateUserDTO = {
             name: TEST_UTILS_NAME,
             email: TEST_UTILS_EMAIL,

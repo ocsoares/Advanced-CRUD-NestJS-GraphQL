@@ -14,7 +14,7 @@ describe('CreateUserResolver', () => {
 
     const mockCreateUserService = TestUtilsCommon.mockService();
 
-    const createUserDTO = TestUtilsCommon.userDataDTO();
+    const createUserDTO = TestUtilsCommon.createUserDataDTO();
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
