@@ -10,7 +10,7 @@ import { ErrorCreatingUserException } from '../../../../exceptions/user-exceptio
 
 describe('CreateUserService', () => {
     let createUserService: CreateUserService;
-    let repository: UserRepository;
+    let userRepository: UserRepository;
     let mockedUser: UserEntity;
 
     const mockUserRepository = {
@@ -37,7 +37,7 @@ describe('CreateUserService', () => {
         }).compile();
 
         createUserService = module.get<CreateUserService>(CreateUserService);
-        repository = module.get(UserRepository);
+        userRepository = module.get(UserRepository);
 
         mockedUser = await TestUtilsCommon.newUser(true);
     });
@@ -50,7 +50,7 @@ describe('CreateUserService', () => {
 
     it('should be defined', () => {
         expect(createUserService).toBeDefined();
-        expect(repository).toBeDefined();
+        expect(userRepository).toBeDefined();
         expect(mockUserRepository).toBeDefined();
         expect(mockedUser).toBeDefined();
         expect(createUserDTO).toBeDefined();
@@ -69,7 +69,7 @@ describe('CreateUserService', () => {
 
         expect(createUser).toEqual(mockedUser);
         expect(isValidEncryptedPassword).toBe(true);
-        expect(repository.create).toHaveBeenCalledWith({
+        expect(userRepository.create).toHaveBeenCalledWith({
             ...createUserDTO,
             password: expect.any(String),
         });
@@ -82,7 +82,9 @@ describe('CreateUserService', () => {
             new UserAlreadyExistsByNameException(),
         );
 
-        expect(repository.findByName).toHaveBeenCalledWith(createUserDTO.name);
+        expect(userRepository.findByName).toHaveBeenCalledWith(
+            createUserDTO.name,
+        );
     });
 
     it('should NOT create a new user if the user already exists with findByEmail method', async () => {
@@ -92,7 +94,9 @@ describe('CreateUserService', () => {
             new UserAlreadyExistsByEmailException(),
         );
 
-        expect(repository.findByName).toHaveBeenCalledWith(createUserDTO.name);
+        expect(userRepository.findByName).toHaveBeenCalledWith(
+            createUserDTO.name,
+        );
     });
 
     it(`should return an InternalServerError if the created user doesn't exists`, async () => {
@@ -100,6 +104,8 @@ describe('CreateUserService', () => {
             new ErrorCreatingUserException(),
         );
 
-        expect(repository.findByName).toHaveBeenCalledWith(createUserDTO.name);
+        expect(userRepository.findByName).toHaveBeenCalledWith(
+            createUserDTO.name,
+        );
     });
 });
