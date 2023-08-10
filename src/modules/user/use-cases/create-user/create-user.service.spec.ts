@@ -23,7 +23,7 @@ describe('CreateUserService', () => {
         updateOneById: jest.fn(),
     };
 
-    const userDataDTO = TestUtilsCommon.userDataDTO();
+    const createUserDTO = TestUtilsCommon.userDataDTO();
 
     beforeEach(async () => {
         const module = await Test.createTestingModule({
@@ -53,53 +53,53 @@ describe('CreateUserService', () => {
         expect(repository).toBeDefined();
         expect(mockUserRepository).toBeDefined();
         expect(mockedUser).toBeDefined();
-        expect(userDataDTO).toBeDefined();
+        expect(createUserDTO).toBeDefined();
     });
 
     it('should create a new user', async () => {
         mockUserRepository.create.mockResolvedValue(mockedUser);
 
-        const createUser = await createUserService.execute(userDataDTO);
+        const createUser = await createUserService.execute(createUserDTO);
 
         const isValidEncryptedPassword =
             await EncryptPasswordHelper.bcryptCompare(
-                userDataDTO.password,
+                createUserDTO.password,
                 mockedUser.password,
             );
 
         expect(createUser).toEqual(mockedUser);
         expect(isValidEncryptedPassword).toBe(true);
         expect(repository.create).toHaveBeenCalledWith({
-            ...userDataDTO,
+            ...createUserDTO,
             password: expect.any(String),
         });
     });
 
     it('should NOT create a new user if the user already exists with findByName method', async () => {
-        mockUserRepository.findByName.mockResolvedValue(userDataDTO);
+        mockUserRepository.findByName.mockResolvedValue(createUserDTO);
 
-        await expect(createUserService.execute(userDataDTO)).rejects.toThrow(
+        await expect(createUserService.execute(createUserDTO)).rejects.toThrow(
             new UserAlreadyExistsByNameException(),
         );
 
-        expect(repository.findByName).toHaveBeenCalledWith(userDataDTO.name);
+        expect(repository.findByName).toHaveBeenCalledWith(createUserDTO.name);
     });
 
     it('should NOT create a new user if the user already exists with findByEmail method', async () => {
-        mockUserRepository.findByEmail.mockResolvedValue(userDataDTO);
+        mockUserRepository.findByEmail.mockResolvedValue(createUserDTO);
 
-        await expect(createUserService.execute(userDataDTO)).rejects.toThrow(
+        await expect(createUserService.execute(createUserDTO)).rejects.toThrow(
             new UserAlreadyExistsByEmailException(),
         );
 
-        expect(repository.findByName).toHaveBeenCalledWith(userDataDTO.name);
+        expect(repository.findByName).toHaveBeenCalledWith(createUserDTO.name);
     });
 
     it(`should return an InternalServerError if the created user doesn't exists`, async () => {
-        await expect(createUserService.execute(userDataDTO)).rejects.toThrow(
+        await expect(createUserService.execute(createUserDTO)).rejects.toThrow(
             new ErrorCreatingUserException(),
         );
 
-        expect(repository.findByName).toHaveBeenCalledWith(userDataDTO.name);
+        expect(repository.findByName).toHaveBeenCalledWith(createUserDTO.name);
     });
 });

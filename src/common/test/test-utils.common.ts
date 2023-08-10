@@ -8,13 +8,13 @@ const TEST_UTILS_PASSWORD = 'test-utils123';
 
 export class TestUtilsCommon {
     static userDataDTO(): CreateUserDTO {
-        const user: CreateUserDTO = {
+        const createUserDTO: CreateUserDTO = {
             name: TEST_UTILS_NAME,
             email: TEST_UTILS_EMAIL,
             password: TEST_UTILS_PASSWORD,
         };
 
-        return user;
+        return createUserDTO;
     }
 
     static async newUser(withPassword: boolean): Promise<UserEntity> {
