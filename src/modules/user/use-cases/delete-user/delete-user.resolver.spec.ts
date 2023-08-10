@@ -1,18 +1,47 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { TestUtilsCommon } from '../../../../common/test/test-utils.common';
 import { DeleteUserResolver } from './delete-user.resolver';
+import { DeleteUserService } from './delete-user.service';
 
 describe('DeleteUserResolver', () => {
-  let resolver: DeleteUserResolver;
+    let deleteUserResolver: DeleteUserResolver;
+    let deleteUserService: DeleteUserService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [DeleteUserResolver],
-    }).compile();
+    const mockDeleteUserService = TestUtilsCommon.mockService();
 
-    resolver = module.get<DeleteUserResolver>(DeleteUserResolver);
-  });
+    const TEST_ID = 'any_id';
 
-  it('should be defined', () => {
-    expect(resolver).toBeDefined();
-  });
+    beforeEach(async () => {
+        const module: TestingModule = await Test.createTestingModule({
+            providers: [
+                DeleteUserResolver,
+                {
+                    provide: DeleteUserService,
+                    useValue: mockDeleteUserService,
+                },
+            ],
+        }).compile();
+
+        deleteUserResolver = module.get<DeleteUserResolver>(DeleteUserResolver);
+        deleteUserService = module.get<DeleteUserService>(DeleteUserService);
+    });
+
+    afterEach(() => {
+        mockDeleteUserService.execute.mockReset();
+    });
+
+    it('should be defined', () => {
+        expect(deleteUserResolver).toBeDefined();
+        expect(deleteUserService).toBeDefined();
+        expect(mockDeleteUserService).toBeDefined();
+    });
+
+    it('should delete a user', async () => {
+        mockDeleteUserService.execute.mockResolvedValue(true);
+
+        const deletedUser = await deleteUserResolver.handle(TEST_ID);
+
+        expect(deletedUser).toEqual(true);
+        expect(deleteUserService.execute).toHaveBeenCalledWith(TEST_ID);
+    });
 });

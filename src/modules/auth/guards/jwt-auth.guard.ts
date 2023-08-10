@@ -2,7 +2,7 @@ import { ExecutionContext, Injectable } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
-import { InvalidTokenException } from 'src/exceptions/auth-exceptions/invalid-token.exception';
+import { InvalidTokenException } from '../../../exceptions/auth-exceptions/invalid-token.exception';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
