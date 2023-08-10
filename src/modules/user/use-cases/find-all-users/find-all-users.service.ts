@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserEntity } from 'src/graphql/entities/user.entity';
 import { IService } from 'src/interfaces/IService';
-import { UserRepository } from 'src/repositories/abstracts/UserRepository';
+import { UserRepository } from '../../../../repositories/abstracts/UserRepository';
 
 @Injectable()
 export class FindAllUsersService implements IService {
