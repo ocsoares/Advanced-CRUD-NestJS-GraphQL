@@ -67,7 +67,7 @@ export class TestUtilsCommon {
         const userWithoutPassword = new UserEntity();
 
         userWithoutPassword.name = TEST_UTILS_NAME;
-        userWithoutPassword.password = TEST_UTILS_PASSWORD; // NÃO SEI SE ISSO TEM Q SER CRIPTOGRAFADO...
+        userWithoutPassword.email = TEST_UTILS_EMAIL;
 
         return userWithoutPassword;
     }
