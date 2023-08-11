@@ -1,10 +1,10 @@
 import { Query, Resolver } from '@nestjs/graphql';
-import { IResolver } from 'src/interfaces/IResolver';
+import { IResolver } from '../../../../interfaces/IResolver';
 import { MeUserService } from './me-user.service';
-import { CurrentUser } from 'src/modules/auth/decorators/current-user.decorator';
-import { UserEntity } from 'src/graphql/entities/user.entity';
+import { CurrentUser } from '../../../../modules/auth/decorators/current-user.decorator';
+import { UserEntity } from '../../../../graphql/entities/user.entity';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../../../modules/auth/guards/jwt-auth.guard';
 
 @Resolver()
 export class MeUserResolver implements IResolver {
