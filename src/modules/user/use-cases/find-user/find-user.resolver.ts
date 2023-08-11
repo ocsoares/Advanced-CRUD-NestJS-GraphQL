@@ -1,9 +1,9 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { IResolver } from 'src/interfaces/IResolver';
 import { FindUserService } from './find-user.service';
-import { UserEntity } from 'src/graphql/entities/user.entity';
+import { UserEntity } from '../../../../graphql/entities/user.entity';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../../../modules/auth/guards/jwt-auth.guard';
 
 @Resolver()
 export class FindUserResolver implements IResolver {
