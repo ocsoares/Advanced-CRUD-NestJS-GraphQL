@@ -22,7 +22,9 @@ describe('LoginUserService', () => {
 
     const loginUserDTO = TestUtilsCommon.loginUserDataDTO();
 
-    const TEST_TOKEN = 'any_token';
+    const TEST_TOKEN: TokenType = {
+        token: 'any_token',
+    };
 
     beforeEach(async () => {
         const module = await Test.createTestingModule({
@@ -67,13 +69,11 @@ describe('LoginUserService', () => {
     it('should login with a valid user', async () => {
         mockUserRepository.findByEmail.mockResolvedValue(mockedUser);
 
-        mockJwtService.signAsync.mockResolvedValue(TEST_TOKEN);
+        mockJwtService.signAsync.mockResolvedValue(TEST_TOKEN.token);
 
         const loginUser = await loginUserService.execute(loginUserDTO);
 
-        expect(loginUser).toEqual(<TokenType>{
-            token: TEST_TOKEN,
-        });
+        expect(loginUser).toEqual(TEST_TOKEN);
 
         expect(userRepository.findByEmail).toHaveBeenCalledWith(
             loginUserDTO.email,
