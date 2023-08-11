@@ -1,7 +1,7 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { IResolver } from 'src/interfaces/IResolver';
+import { IResolver } from '../../../../interfaces/IResolver';
 import { LoginUserService } from './login-user.service';
-import { TokenType } from 'src/graphql/types/token.type';
+import { TokenType } from '../../../../graphql/types/token.type';
 import { LoginUserDTO } from './dtos/LoginUserDTO';
 
 @Resolver()

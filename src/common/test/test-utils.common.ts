@@ -1,6 +1,7 @@
 import { UserEntity } from '../../graphql/entities/user.entity';
 import { EncryptPasswordHelper } from '../..//helpers/encrypt-password.helper';
 import { CreateUserDTO } from '../..//modules/user/use-cases/create-user/dtos/CreateUserDTO';
+import { LoginUserDTO } from 'src/modules/user/use-cases/login-user/dtos/LoginUserDTO';
 
 const TEST_UTILS_NAME = 'Test Utils';
 const TEST_UTILS_EMAIL = 'test_utils@gmail.com';
@@ -37,6 +38,15 @@ export class TestUtilsCommon {
         };
 
         return createUserDTO;
+    }
+
+    static loginUserDataDTO(): LoginUserDTO {
+        const loginUserDTO: LoginUserDTO = {
+            email: TEST_UTILS_EMAIL,
+            password: TEST_UTILS_PASSWORD,
+        };
+
+        return loginUserDTO;
     }
 
     static async newUser(withPassword: boolean): Promise<UserEntity> {

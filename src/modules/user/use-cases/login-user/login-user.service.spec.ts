@@ -1,47 +1,118 @@
-import { JwtService } from '@nestjs/jwt';
-import { Test, TestingModule } from '@nestjs/testing';
-import { IUserPayload } from 'src/modules/auth/models/IUserPayload';
+import { Test } from '@nestjs/testing';
+import { UserRepository } from '../../../../repositories/abstracts/UserRepository';
+import { TestUtilsCommon } from '../../../../common/test/test-utils.common';
+import { EncryptPasswordHelper } from '../../../../helpers/encrypt-password.helper';
+import { UserEntity } from '../../../../graphql/entities/user.entity';
 import { LoginUserService } from './login-user.service';
+import { AuthTestModule } from '../../../../modules/test/auth-module/auth-test.module';
+import { TokenType } from 'src/graphql/types/token.type';
+import { JwtService } from '@nestjs/jwt';
+import { InvalidCredentialsException } from '../../../../exceptions/auth-exceptions/invalid-credentials.exception';
 
 describe('LoginUserService', () => {
-    let service: LoginUserService;
+    let loginUserService: LoginUserService;
+    let userRepository: UserRepository;
+    let mockedUser: UserEntity;
 
-    const JWT = 'any_jwt';
+    const mockUserRepository = TestUtilsCommon.mockUserRepository();
+    const mockJwtService = {
+        signAsync: jest.fn(),
+    };
+    const bcryptCompareSpy = jest.spyOn(EncryptPasswordHelper, 'bcryptCompare');
+
+    const loginUserDTO = TestUtilsCommon.loginUserDataDTO();
+
+    const TEST_TOKEN = 'any_token';
 
     beforeEach(async () => {
-        const module: TestingModule = await Test.createTestingModule({
+        const module = await Test.createTestingModule({
+            imports: [AuthTestModule],
             providers: [
                 LoginUserService,
                 {
+                    provide: UserRepository,
+                    useValue: mockUserRepository,
+                },
+                {
                     provide: JwtService,
-                    useExisting: JwtService,
-                    useValue: {
-                        sign: jest.fn().mockResolvedValue(JWT),
-                    },
+                    useValue: mockJwtService,
                 },
             ],
         }).compile();
 
-        service = module.get<LoginUserService>(LoginUserService);
+        loginUserService = module.get<LoginUserService>(LoginUserService);
+        userRepository = module.get(UserRepository);
 
-        jest.spyOn(service, 'execute');
+        mockedUser = await TestUtilsCommon.newUser(true);
+    });
+
+    afterEach(() => {
+        Object.values(mockUserRepository).forEach((mockedMethod) =>
+            mockedMethod.mockReset(),
+        );
+
+        mockJwtService.signAsync.mockReset();
+
+        bcryptCompareSpy.mockReset();
     });
 
     it('should be defined', () => {
-        expect(service).toBeDefined();
+        expect(loginUserService).toBeDefined();
+        expect(userRepository).toBeDefined();
+        expect(mockUserRepository).toBeDefined();
+        expect(mockedUser).toBeDefined();
+        expect(loginUserDTO).toBeDefined();
     });
 
-    it('should generate a JWT with a valid payload', async () => {
-        const payload: IUserPayload = {
-            sub: 'any_id',
-            name: 'Teste',
-            email: 'teste@gmail.com',
-        };
+    it('should login with a valid user', async () => {
+        mockUserRepository.findByEmail.mockResolvedValue(mockedUser);
 
-        const result = await service.execute(payload);
+        mockJwtService.signAsync.mockResolvedValue(TEST_TOKEN);
 
-        expect(result).toEqual(JWT);
-        expect(service.execute).toHaveBeenCalledTimes(1);
-        expect(service.execute).toHaveBeenCalledWith(payload);
+        const loginUser = await loginUserService.execute(loginUserDTO);
+
+        expect(loginUser).toEqual(<TokenType>{
+            token: TEST_TOKEN,
+        });
+
+        expect(userRepository.findByEmail).toHaveBeenCalledWith(
+            loginUserDTO.email,
+        );
+
+        expect(bcryptCompareSpy).toHaveBeenCalledWith(
+            loginUserDTO.password,
+            mockedUser.password,
+        );
+    });
+
+    it('should NOT login with a user if the user email is invalid', async () => {
+        await expect(loginUserService.execute(loginUserDTO)).rejects.toThrow(
+            new InvalidCredentialsException(),
+        );
+
+        expect(userRepository.findByEmail).toHaveBeenCalledWith(
+            loginUserDTO.email,
+        );
+
+        expect(bcryptCompareSpy).toHaveBeenCalledTimes(0);
+    });
+
+    it('should NOT login with a user if the user password is invalid', async () => {
+        mockUserRepository.findByEmail.mockResolvedValue(mockedUser);
+
+        bcryptCompareSpy.mockResolvedValue(false);
+
+        await expect(loginUserService.execute(loginUserDTO)).rejects.toThrow(
+            new InvalidCredentialsException(),
+        );
+
+        expect(userRepository.findByEmail).toHaveBeenCalledWith(
+            loginUserDTO.email,
+        );
+
+        expect(bcryptCompareSpy).toHaveBeenCalledWith(
+            loginUserDTO.password,
+            mockedUser.password,
+        );
     });
 });

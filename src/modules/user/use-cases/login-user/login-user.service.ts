@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { IService } from 'src/interfaces/IService';
-import { UserRepository } from 'src/repositories/abstracts/UserRepository';
+import { UserRepository } from '../../../../repositories/abstracts/UserRepository';
 import { LoginUserDTO } from './dtos/LoginUserDTO';
 import { TokenType } from 'src/graphql/types/token.type';
-import { InvalidCredentialsException } from 'src/exceptions/auth-exceptions/invalid-credentials.exception';
+import { InvalidCredentialsException } from '../../../../exceptions/auth-exceptions/invalid-credentials.exception';
 import { JwtService } from '@nestjs/jwt';
 import { ITokenPayload } from 'src/interfaces/ITokenPayload';
-import { EncryptPasswordHelper } from 'src/helpers/encrypt-password.helper';
+import { EncryptPasswordHelper } from '../../../../helpers/encrypt-password.helper';
 
 @Injectable()
 export class LoginUserService implements IService {
