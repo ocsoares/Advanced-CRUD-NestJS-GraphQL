@@ -45,8 +45,6 @@ describe('MeUserService', () => {
     it('should show the logged user', async () => {
         mockUserRepository.findById.mockResolvedValue(mockedUser);
 
-        mockUserRepository.deleteOneById.mockResolvedValue(mockedUser);
-
         const meUser = await meUserService.execute(mockedUser.id);
 
         expect(meUser).toEqual(mockedUser);
