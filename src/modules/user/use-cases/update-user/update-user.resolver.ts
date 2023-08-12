@@ -1,10 +1,10 @@
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
-import { IResolver } from 'src/interfaces/IResolver';
+import { IResolver } from '../../../../interfaces/IResolver';
 import { UpdateUserService } from './update-user.service';
 import { UpdateUserDTO } from './dtos/UpdateUserDTO';
-import { UserEntity } from 'src/graphql/entities/user.entity';
+import { UserEntity } from '../../../../graphql/entities/user.entity';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../../../modules/auth/guards/jwt-auth.guard';
 
 @Resolver()
 export class UpdateUserResolver implements IResolver {
