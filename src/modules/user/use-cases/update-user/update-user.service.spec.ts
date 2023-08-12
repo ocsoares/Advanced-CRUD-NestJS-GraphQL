@@ -3,7 +3,6 @@ import { UserRepository } from '../../../../repositories/abstracts/UserRepositor
 import { TestUtilsCommon } from '../../../../common/test/test-utils.common';
 import { UserEntity } from '../../../../graphql/entities/user.entity';
 import { UserNotFoundException } from '../../../../exceptions/user-exceptions/user-not-found.exception';
-import { UpdateUserDTO } from './dtos/UpdateUserDTO';
 import { UpdateUserService } from './update-user.service';
 import { EncryptPasswordHelper } from '../../../../helpers/encrypt-password.helper';
 import { ErrorUpdatingUserException } from '../../../../exceptions/user-exceptions/error-updating-user.exception';
@@ -21,11 +20,7 @@ describe('UpdateUserService', () => {
         password: 'savedUser123',
     };
 
-    const updateUserDTO: UpdateUserDTO = {
-        name: 'Update User',
-        email: 'updateUser@gmail.com',
-        password: 'updateUser123',
-    };
+    const updateUserDTO = TestUtilsCommon.updateUserDataDTO();
 
     const mockUserRepository = TestUtilsCommon.mockUserRepository();
 
