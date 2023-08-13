@@ -1,6 +1,6 @@
 {
-  "name": "api-nestjs-template",
-  "version": "0.0.1",
+  "name": "advanced-crud-nestjs-graphql",
+  "version": "1.0.0",
   "description": "Template para APIs usando NestJS",
   "author": "Cauã Soares",
   "private": true,
