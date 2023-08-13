@@ -22,6 +22,14 @@ Esse projeto é um **CRUD** avançado feito com **NestJS** e **GraphQL**, onde f
 
 ![User use-cases](https://raw.githubusercontent.com/ocsoares/images/master/advanced-crud-nestjs-graphql/use-cases.jpg)
 
+## Trechos do código
+
+Trechos de código responsável pela função de **login** do usuário.
+
+![Login user service](https://raw.githubusercontent.com/ocsoares/images/master/advanced-crud-nestjs-graphql/login-user-service.jpg)
+
+![Login user resolver](https://raw.githubusercontent.com/ocsoares/images/master/advanced-crud-nestjs-graphql/login-user-resolver.jpg)
+
 ## GraphQL Playground
 
 Esse é o modo interativo do próprio GraphQL para usar as funcionalidades disponíveis na aplicação.
